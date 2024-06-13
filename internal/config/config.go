@@ -32,7 +32,7 @@ type LoggingConfig struct {
 	Output string `yaml:"output"`
 }
 
-func Init() (*Config, error) {
+func Init() (Config, error) {
 	var configPath string
 
 	if len(os.Args) > 1 {
@@ -43,25 +43,25 @@ func Init() (*Config, error) {
 
 	info, err := os.Stat(configPath)
 	if err != nil {
-		return nil, fmt.Errorf("stat config %q: %w", configPath, err)
+		return Config{}, fmt.Errorf("stat config %q: %w", configPath, err)
 	}
 
 	if info.IsDir() {
-		return nil, fmt.Errorf("config %q is a directory", configPath)
+		return Config{}, fmt.Errorf("config %q is a directory", configPath)
 	}
 
 	data, err := os.ReadFile(configPath)
 	if err != nil {
-		return nil, fmt.Errorf("read config file: %w", err)
+		return Config{}, fmt.Errorf("read config file: %w", err)
 	}
 
-	cfg := &Config{}
+	cfg := Config{}
 	if err := yaml.Unmarshal(data, cfg); err != nil {
-		return nil, fmt.Errorf("unmarshal config: %w", err)
+		return Config{}, fmt.Errorf("unmarshal config: %w", err)
 	}
 
-	if err := validate(cfg); err != nil {
-		return nil, fmt.Errorf("validate config: %w", err)
+	if err := validate(&cfg); err != nil {
+		return Config{}, fmt.Errorf("validate config: %w", err)
 	}
 
 	return cfg, nil
