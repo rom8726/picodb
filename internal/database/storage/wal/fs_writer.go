@@ -97,7 +97,7 @@ func (w *FSWriter) rotateSegment() error {
 	segmentName := fmt.Sprintf("%s/wal_%d.log", w.directory, now().UnixMilli())
 
 	flags := os.O_CREATE | os.O_WRONLY
-	segment, err := os.OpenFile(segmentName, flags, 0644)
+	segment, err := os.OpenFile(segmentName, flags, 0o644)
 	if err != nil {
 		w.logger.Error().Err(err).Msg("failed to create wal segment")
 

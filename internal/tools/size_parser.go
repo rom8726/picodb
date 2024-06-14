@@ -3,7 +3,7 @@ package tools
 import "errors"
 
 func ParseSize(text string) (int, error) {
-	if len(text) == 0 || text[0] < '0' || text[0] > '9' {
+	if text == "" || text[0] < '0' || text[0] > '9' {
 		return 0, errors.New("incorrect size")
 	}
 

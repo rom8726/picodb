@@ -6,7 +6,7 @@ import (
 	"sort"
 )
 
-func SegmentUpperBound(directory string, lastSegmentName string) (string, error) {
+func SegmentUpperBound(directory, lastSegmentName string) (string, error) {
 	files, err := os.ReadDir(directory)
 	if err != nil {
 		return "", fmt.Errorf("failed to scan WAL directory: %w", err)
@@ -25,9 +25,9 @@ func SegmentUpperBound(directory string, lastSegmentName string) (string, error)
 	idx := upperBound(filenames, lastSegmentName)
 	if idx < len(filenames) {
 		return filenames[idx], nil
-	} else {
-		return "", nil
 	}
+
+	return "", nil
 }
 
 func SegmentLast(directory string) (string, error) {
@@ -44,6 +44,7 @@ func SegmentLast(directory string) (string, error) {
 		}
 
 		filename = file.Name()
+
 		break
 	}
 

@@ -1,4 +1,4 @@
-package in_memory
+package inmemory
 
 import (
 	"sync"
@@ -31,6 +31,7 @@ func (s *HashTable) Get(key string) (string, bool) {
 	defer s.mutex.RUnlock()
 
 	value, found := s.data[key]
+
 	return value, found
 }
 

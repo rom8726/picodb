@@ -138,7 +138,7 @@ func (s *Slave) handleResponse(response Response) {
 func (s *Slave) saveWALSegment(segmentName string, segmentData []byte) error {
 	flags := os.O_CREATE | os.O_WRONLY
 	filename := fmt.Sprintf("%s/%s", s.walDirectory, segmentName)
-	segment, err := os.OpenFile(filename, flags, 0644)
+	segment, err := os.OpenFile(filename, flags, 0o644)
 	if err != nil {
 		return fmt.Errorf("failed to create wal segment: %w", err)
 	}

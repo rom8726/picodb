@@ -1,4 +1,4 @@
-package in_memory
+package inmemory
 
 import (
 	"context"
@@ -99,6 +99,7 @@ func (e *Engine) Del(ctx context.Context, key string) {
 func (e *Engine) partitionIdx(key string) int {
 	hash := fnv.New32a()
 	_, _ = hash.Write([]byte(key))
+
 	return int(hash.Sum32()) % len(e.partitions)
 }
 
