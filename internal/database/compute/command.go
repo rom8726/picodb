@@ -23,6 +23,10 @@ var commandNamesToID = map[string]CommandID{
 	DelCommand:     DelCommandID,
 }
 
+func (c CommandID) Int() int {
+	return int(c)
+}
+
 func CommandNameToCommandID(command string) CommandID {
 	id, found := commandNamesToID[command]
 	if !found {
