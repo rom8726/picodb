@@ -8,6 +8,7 @@ import (
 	"syscall"
 
 	"picodb/internal/config"
+	"picodb/internal/initialization"
 
 	"github.com/rs/zerolog"
 )
@@ -26,7 +27,7 @@ func main() {
 
 func run(console *zerolog.Logger) error {
 	console.Info().Msg("init config...")
-	_, err := config.Init()
+	cfg, err := config.Init()
 	if err != nil {
 		return fmt.Errorf("init config: %w", err)
 	}
@@ -34,7 +35,14 @@ func run(console *zerolog.Logger) error {
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer cancel()
 
-	<-ctx.Done()
+	initializer, err := initialization.NewInitializer(cfg)
+	if err != nil {
+		console.Fatal().Err(err).Msg("init initializer")
+	}
+
+	if err = initializer.StartDatabase(ctx); err != nil {
+		console.Fatal().Err(err).Msg("start database")
+	}
 
 	return nil
 }

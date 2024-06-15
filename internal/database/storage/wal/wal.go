@@ -7,6 +7,7 @@ import (
 
 	"github.com/rs/zerolog"
 
+	appContext "picodb/internal/context"
 	"picodb/internal/database/compute"
 	"picodb/internal/tools"
 )
@@ -106,7 +107,7 @@ func (w *WAL) flushBatch() {
 }
 
 func (w *WAL) push(ctx context.Context, commandID compute.CommandID, args []string) tools.FutureError {
-	txID := ctx.Value("tx").(int64)
+	txID := appContext.TxIDFromContext(ctx)
 	record := NewLog(txID, commandID, args)
 
 	tools.WithLock(&w.mutex, func() {

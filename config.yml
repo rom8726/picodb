@@ -1,5 +1,0 @@
-network:
-  port: 1945
-  max_connections: 1000
-  max_message_size: 4048
-  idle_timeout: 5m

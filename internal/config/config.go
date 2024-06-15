@@ -76,7 +76,7 @@ func Init() (Config, error) {
 	}
 
 	cfg := Config{}
-	if err := yaml.Unmarshal(data, cfg); err != nil {
+	if err := yaml.Unmarshal(data, &cfg); err != nil {
 		return Config{}, fmt.Errorf("unmarshal config: %w", err)
 	}
 
@@ -88,9 +88,8 @@ func Init() (Config, error) {
 }
 
 func validate(cfg *Config) error {
-	netw := cfg.Network
-	err := validation.ValidateStruct(&netw,
-		validation.Field(&netw.Address, validation.Required),
+	err := validation.ValidateStruct(cfg.Network,
+		validation.Field(&cfg.Network.Address, validation.Required),
 	)
 	if err != nil {
 		return fmt.Errorf("validate network section: %w", err)

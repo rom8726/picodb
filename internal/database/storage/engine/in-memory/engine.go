@@ -7,6 +7,7 @@ import (
 
 	"github.com/rs/zerolog"
 
+	appContext "picodb/internal/context"
 	"picodb/internal/database/compute"
 	"picodb/internal/database/storage/wal"
 )
@@ -32,10 +33,6 @@ func NewEngine(
 		return nil, errors.New("hash table builder is invalid")
 	}
 
-	if stream == nil {
-		return nil, errors.New("stream is invalid")
-	}
-
 	if partitionsNumber <= 0 {
 		return nil, errors.New("partitions number is invalid")
 	}
@@ -58,11 +55,13 @@ func NewEngine(
 		logger:     logger,
 	}
 
-	go func() {
-		for logs := range stream {
-			engine.applyLogs(logs)
-		}
-	}()
+	if stream != nil {
+		go func() {
+			for logs := range stream {
+				engine.applyLogs(logs)
+			}
+		}()
+	}
 
 	return engine, nil
 }
@@ -72,7 +71,7 @@ func (e *Engine) Set(ctx context.Context, key, value string) {
 	partition := e.partitions[idx]
 	partition.Set(key, value)
 
-	txID := ctx.Value("tx").(int64)
+	txID := appContext.TxIDFromContext(ctx)
 	e.logger.Debug().Int64("tx", txID).Msg("success set query")
 }
 
@@ -81,7 +80,7 @@ func (e *Engine) Get(ctx context.Context, key string) (string, bool) {
 	partition := e.partitions[idx]
 	value, found := partition.Get(key)
 
-	txID := ctx.Value("tx").(int64)
+	txID := appContext.TxIDFromContext(ctx)
 	e.logger.Debug().Int64("tx", txID).Msg("success get query")
 
 	return value, found
@@ -92,7 +91,7 @@ func (e *Engine) Del(ctx context.Context, key string) {
 	partition := e.partitions[idx]
 	partition.Del(key)
 
-	txID := ctx.Value("tx").(int64)
+	txID := appContext.TxIDFromContext(ctx)
 	e.logger.Debug().Int64("tx", txID).Msg("success del query")
 }
 

@@ -22,3 +22,5 @@ go.work
 
 # IDEs
 .idea
+
+config.yml
