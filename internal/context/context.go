@@ -15,5 +15,7 @@ func WithTxID(ctx context.Context, txID int64) context.Context {
 }
 
 func TxIDFromContext(ctx context.Context) int64 {
-	return ctx.Value(txKey).(int64)
+	v, _ := ctx.Value(txKey).(int64)
+
+	return v
 }
