@@ -94,7 +94,7 @@ func (m *Master) synchronize(request Request) Response {
 
 	response.Succeed = true
 	response.SegmentData = data
-	response.SegmentName = filename
+	response.SegmentName = segmentName
 
 	return response
 }

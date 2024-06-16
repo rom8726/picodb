@@ -124,7 +124,9 @@ func (s *Slave) handleResponse(response Response) {
 		return
 	}
 
-	if err := s.saveWALSegment(response.SegmentName, response.SegmentData); err != nil {
+	filename := response.SegmentName
+
+	if err := s.saveWALSegment(filename, response.SegmentData); err != nil {
 		s.logger.Error().Err(err).Msg("failed to apply replication data")
 	}
 
