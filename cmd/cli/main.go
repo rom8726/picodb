@@ -48,6 +48,10 @@ func main() {
 			logger.Fatal().Err(err).Msg("failed to read user query")
 		}
 
+		if request == "\n" {
+			continue
+		}
+
 		response, err := client.Send([]byte(request))
 		if err != nil {
 			if errors.Is(err, syscall.EPIPE) {
