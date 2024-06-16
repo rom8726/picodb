@@ -63,7 +63,7 @@ func NewSlave(
 	}, nil
 }
 
-func (s *Slave) Start(_ context.Context) {
+func (s *Slave) Start(ctx context.Context) {
 	go func() {
 		defer close(s.closeDoneCh)
 
@@ -76,6 +76,8 @@ func (s *Slave) Start(_ context.Context) {
 
 			select {
 			case <-s.closeCh:
+				return
+			case <-ctx.Done():
 				return
 			case <-time.After(s.syncInterval):
 				s.synchronize()

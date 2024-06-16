@@ -13,7 +13,6 @@ import (
 
 type TCPServer interface {
 	Start(context.Context, func(context.Context, []byte) []byte) error
-	Shutdown()
 }
 
 type Master struct {
@@ -59,10 +58,6 @@ func (m *Master) Start(ctx context.Context) error {
 
 		return responseData
 	})
-}
-
-func (m *Master) Shutdown() {
-	m.server.Shutdown()
 }
 
 func (m *Master) IsMaster() bool {

@@ -104,10 +104,6 @@ func (s *TCPServer) Start(ctx context.Context, handler func(context.Context, []b
 	return s.HandleQueries(ctx, handler)
 }
 
-func (s *TCPServer) Shutdown() {
-
-}
-
 func (s *TCPServer) handleConnection(ctx context.Context, connection net.Conn, handler TCPHandler) {
 	request := make([]byte, s.messageSize)
 

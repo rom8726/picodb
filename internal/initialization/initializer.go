@@ -77,9 +77,12 @@ func (i *Initializer) StartDatabase(ctx context.Context) error {
 		return err
 	}
 
+	defer strg.Shutdown()
+
 	db := database.NewDatabase(computeLayer, strg, i.logger)
 
 	group, groupCtx := errgroup.WithContext(ctx)
+
 	if i.master != nil {
 		group.Go(func() error {
 			return i.master.Start(groupCtx)

@@ -35,11 +35,13 @@ func run(console *zerolog.Logger) error {
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer cancel()
 
+	console.Info().Msg("initialize database...")
 	initializer, err := initialization.NewInitializer(cfg)
 	if err != nil {
 		console.Fatal().Err(err).Msg("init initializer")
 	}
 
+	console.Info().Msg("start database...")
 	if err = initializer.StartDatabase(ctx); err != nil {
 		console.Fatal().Err(err).Msg("start database")
 	}
