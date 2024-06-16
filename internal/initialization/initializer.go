@@ -110,10 +110,10 @@ func (i *Initializer) createComputeLayer() *compute.Compute {
 	return compute.NewCompute(queryParser, queryAnalyzer, i.logger)
 }
 
-func (i *Initializer) createStorageLayer(ctx context.Context) (*storage.Storage, error) {
-	if i.slave != nil {
-		//i.slave.StartSynchronization(ctx) // TODO:
-	}
+func (i *Initializer) createStorageLayer(context.Context) (*storage.Storage, error) {
+	// if i.slave != nil {
+	// i.slave.StartSynchronization(ctx) // TODO:
+	// }
 
 	strg, err := storage.NewStorage(i.engine, i.wal, i.storageReplicaSlave(), i.logger)
 	if err != nil {

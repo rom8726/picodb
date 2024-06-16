@@ -1,3 +1,4 @@
+//nolint:gocritic
 package initialization
 
 import (
@@ -23,13 +24,14 @@ var supportedLoggingLevels = map[string]zerolog.Level{
 	ErrorLevel: zerolog.ErrorLevel,
 }
 
-const defaultEncoding = "json"
+// const defaultEncoding = "json"
 const defaultLevel = zerolog.InfoLevel
-const defaultOutputPath = "output.log"
+
+// const defaultOutputPath = "output.log"
 
 func CreateLogger(cfg *config.LoggingConfig) (*zerolog.Logger, error) {
 	level := defaultLevel
-	//output := defaultOutputPath
+	// output := defaultOutputPath
 
 	if cfg != nil {
 		if cfg.Level != "" {
@@ -39,9 +41,9 @@ func CreateLogger(cfg *config.LoggingConfig) (*zerolog.Logger, error) {
 			}
 		}
 
-		//if cfg.Output != "" {
+		// if cfg.Output != "" {
 		//	output = cfg.Output
-		//}
+		// }
 	}
 
 	logger := zerolog.New(os.Stdout).With().Timestamp().Caller().Logger().Level(level)

@@ -31,9 +31,9 @@ func CreateReplica(
 		if replicationCfg.ReplicaType != "" {
 			if replicationCfg.ReplicaType != "master" && replicationCfg.ReplicaType != "slave" {
 				return nil, errors.New("replica type is incorrect")
-			} else {
-				replicaType = replicationCfg.ReplicaType
 			}
+
+			replicaType = replicationCfg.ReplicaType
 		}
 
 		if replicationCfg.MasterAddress != "" {
@@ -60,12 +60,12 @@ func CreateReplica(
 		}
 
 		return replication.NewMaster(server, walDirectory, logger)
-	} else {
-		client, err := network.NewTCPClient(masterAddress, maxMessageSize, idleTimeout)
-		if err != nil {
-			return nil, err
-		}
-
-		return replication.NewSlave(client, stream, walDirectory, syncInterval, logger)
 	}
+
+	client, err := network.NewTCPClient(masterAddress, maxMessageSize, idleTimeout)
+	if err != nil {
+		return nil, err
+	}
+
+	return replication.NewSlave(client, stream, walDirectory, syncInterval, logger)
 }

@@ -53,7 +53,7 @@ func CreateWAL(
 		fsWriter := wal.NewFSWriter(dataDirectory, maxSegmentSize, logger)
 
 		return wal.NewWAL(fsWriter, fsReader, stream, flushingBatchTimeout, flushingBatchSize, logger), nil
-	} else {
-		return nil, nil
 	}
+
+	return nil, nil
 }
