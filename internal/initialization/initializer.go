@@ -49,23 +49,20 @@ func NewInitializer(cfg config.Config) (*Initializer, error) {
 		return nil, fmt.Errorf("failed to initialize network: %w", err)
 	}
 
-	// TODO:
-	//replica, err := CreateReplica(cfg.Replication, cfg.WAL, logger, stream)
-	//if err != nil {
-	//	return nil, fmt.Errorf("failed to initialize replication: %w", err)
-	//}
+	replica, err := CreateReplica(cfg.Replication, cfg.WAL, logger, stream)
+	if err != nil {
+		return nil, fmt.Errorf("failed to initialize replication: %w", err)
+	}
 
 	initializer := &Initializer{
 		wal:    wal,
 		engine: dbEngine,
 		server: tcpServer,
-		slave:  nil,
-		master: nil,
 		logger: logger,
 		stream: stream,
 	}
 
-	//initializer.initializeReplication(replica)
+	initializer.initializeReplication(replica)
 
 	return initializer, nil
 }
@@ -84,10 +81,9 @@ func (i *Initializer) StartDatabase(ctx context.Context) error {
 
 	group, groupCtx := errgroup.WithContext(ctx)
 	if i.master != nil {
-		// TODO:
-		//group.Go(func() error {
-		//	return i.master.HandleSynchronizations(groupCtx)
-		//})
+		group.Go(func() error {
+			return i.master.Start(groupCtx)
+		})
 	}
 
 	group.Go(func() error {
@@ -119,7 +115,7 @@ func (i *Initializer) createStorageLayer(ctx context.Context) (*storage.Storage,
 		//i.slave.StartSynchronization(ctx) // TODO:
 	}
 
-	strg, err := storage.NewStorage(i.engine, i.wal, nil /*i.slave*/, i.logger) // TODO:
+	strg, err := storage.NewStorage(i.engine, i.wal, i.storageReplicaSlave(), i.logger)
 	if err != nil {
 		i.logger.Error().Err(err).Msg("failed to initialize storage layer")
 
@@ -148,4 +144,12 @@ func (i *Initializer) initializeReplication(replica interface{}) {
 	default:
 		i.logger.Error().Msg("incorrect replication type")
 	}
+}
+
+func (i *Initializer) storageReplicaSlave() storage.Replica {
+	if i.slave == nil {
+		return nil
+	}
+
+	return i.slave
 }

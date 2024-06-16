@@ -54,13 +54,12 @@ func CreateReplica(
 	idleTimeout := syncInterval * 3
 
 	if replicaType == "master" {
-		//server, err := network.NewTCPServer(masterAddress, maxReplicasNumber, maxMessageSize, idleTimeout, logger)
-		//if err != nil {
-		//	return nil, err
-		//}
-		//
-		//return replication.NewMaster(server, walDirectory, logger)
-		return nil, nil // TODO:
+		server, err := network.NewTCPServer(masterAddress, maxReplicasNumber, maxMessageSize, idleTimeout, logger)
+		if err != nil {
+			return nil, err
+		}
+
+		return replication.NewMaster(server, walDirectory, logger)
 	} else {
 		client, err := network.NewTCPClient(masterAddress, maxMessageSize, idleTimeout)
 		if err != nil {

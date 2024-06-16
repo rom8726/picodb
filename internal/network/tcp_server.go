@@ -100,6 +100,14 @@ func (s *TCPServer) HandleQueries(ctx context.Context, handler TCPHandler) error
 	return nil
 }
 
+func (s *TCPServer) Start(ctx context.Context, handler func(context.Context, []byte) []byte) error {
+	return s.HandleQueries(ctx, handler)
+}
+
+func (s *TCPServer) Shutdown() {
+
+}
+
 func (s *TCPServer) handleConnection(ctx context.Context, connection net.Conn, handler TCPHandler) {
 	request := make([]byte, s.messageSize)
 

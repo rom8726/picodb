@@ -12,7 +12,7 @@ import (
 )
 
 type TCPServer interface {
-	Start(context.Context, func(context.Context, []byte) []byte)
+	Start(context.Context, func(context.Context, []byte) []byte) error
 	Shutdown()
 }
 
@@ -38,8 +38,8 @@ func NewMaster(server TCPServer, walDirectory string, logger *zerolog.Logger) (*
 	}, nil
 }
 
-func (m *Master) Start(ctx context.Context) {
-	m.server.Start(ctx, func(ctx context.Context, requestData []byte) []byte {
+func (m *Master) Start(ctx context.Context) error {
+	return m.server.Start(ctx, func(ctx context.Context, requestData []byte) []byte {
 		if ctx.Err() != nil {
 			return nil
 		}
