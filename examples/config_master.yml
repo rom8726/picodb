@@ -1,0 +1,19 @@
+network:
+  address: ":1945"
+  max_connections: 1000
+  max_message_size: 4048
+  idle_timeout: 5m
+wal:
+  flushing_batch_length: 1024
+  flushing_batch_timeout: 1s
+  max_segment_size: 4096
+  data_directory: /tmp/temp_wal_master/
+engine:
+  type: in_memory
+replication:
+  replica_type: master
+  master_address: ":1946"
+  sync_interval: 1s
+logging:
+  level: info
+  output: /tmp/picodb_master.log
